@@ -28,6 +28,7 @@ module.exports = {
         ],
       },
       { test: /\.js?x$/, loader: 'babel-loader', exclude: /node_modules/ },
+      { test: /\.(png|svg|jpg|jpeg|gif)$/i, type: 'asset/resource'},
     ]
   },
   resolve: {

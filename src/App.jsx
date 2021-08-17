@@ -3,22 +3,44 @@
 // import Sidebar from "./components/Sidebar";
 // import WeatherInfo from "./components/WeatherInfo";
 import {useState} from 'react'
+import cloudIcon from "./assets/cloud-solid.svg"
+import rainIcon from "./assets/cloud-rain-solid.svg"
+import snowIcon from "./assets/snowflake-regular.svg"
+import sunIcon from "./assets/sun-regular.svg"
+import windIcon from "./assets/wind-solid.svg"
+
 const API_KEY = "93acb782ba9cde069e257374df26c92b"
 
-// fetch('https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&appid=93acb782ba9cde069e257374df26c92b&units=metric&lang=ru')
-// .then((res) => res.json())
-// .then((data) => console.log(data))
+const weatherIcon = {
+  "sunny": sunIcon,
+  "windy": windIcon,
+  "snow": snowIcon,
+  "rainy": rainIcon,
+  "cloudy": cloudIcon,
+}
+ function getWeatherIcon(title){
+   switch(title){
+     case 'clear': return sunIcon
+     case 'wind': return windIcon
+     case 'snow': return snowIcon
+     case 'rain': return rainIcon
+     case 'cloud': return cloudIcon
+     default: return cloudIcon
+   }
+ }
+
 
 function App() {
   const [searchBar, setSearchBar] = useState(false)
-
   const [countries, setCountries] = useState([])
-
   const [loading, setLoading] = useState(false)
-
   const [weather, setWeather] =useState(null)
-
   const searchBarClass = "widget__searching " + (searchBar ? "opened" : "")
+
+  const dateTitle = new Intl.DateTimeFormat('ru-RU', { 
+    weekday: 'short', 
+    day: '2-digit',
+  month: "short" }).format(new Date())
 
   function onSearch(e){
     e.preventDefault()
@@ -38,13 +60,14 @@ function App() {
 
   function getWeather(country){
     const { lat, lon, address } =country
-    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=ru`)
+    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=eng`)
     .then((res)=> res.json())
     .then((data) =>{ 
       setWeather({
         temp: Math.round(data.main.temp),
         tempFeelsLike: Math.round(data.main.feels_like),
         description: data.weather[0].description,
+        title:data.weather[0].main.toLowerCase(),
         city: address.city
 
       })
@@ -54,18 +77,18 @@ function App() {
   }
 
 
+
+
   return (
     <div className="App">
        <div className="widget">
         <button className="button widget__serching-open" onClick ={()=> setSearchBar(true)} >
           Поиск города
         </button>
-        <div className="widget__icon">
-          <img src="./img/image 16.png" alt="widget-icon" className="widget-icon__img"/>
-        </div>
-        <div className="widget__background">
-          <img src="./img/Cloud-background 1.png" alt="background" className="widget-background__img"/>
-        </div>
+       { weather && (<div className="widget__icon">
+          <img src={getWeatherIcon(weather.title)} alt="widget-icon" className="widget-icon__img"/>
+        </div>)}
+      
         <div className={searchBarClass}>
           <button className="searching__close" onClick ={()=> setSearchBar(false)}>
             <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -98,7 +121,7 @@ function App() {
             Ощущается как {weather.tempFeelsLike} °C </div>
           <div className="widget-body__date">
             <div className="date__text">Сегодня</div>
-            <div className="date__info"> Вс, 13 мар  </div>
+            <div className="date__info"> {dateTitle}  </div>
           </div>
           <div className="widget-body__geo">
             <div className="geo__icon">

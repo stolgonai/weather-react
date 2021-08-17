@@ -350,9 +350,6 @@ legend {
   margin: 10px;
 }
 
-
-.widget__header {}
-
 .widget__body {
   width: 100%;
   display: flex;
@@ -425,9 +422,6 @@ legend {
   margin-right: 12px;
 }
 
-.geo_city {
-}
-
 .main {
   display: flex;
   flex: 1;
@@ -477,8 +471,6 @@ legend {
 .forecast-radio__label:first-child {
   margin-right: 16px;
 }
-
-.forecast-radio__input {}
 
 .forecast-radio__input:checked+.forecast-radio__text {
   color: #48484A;
@@ -560,8 +552,6 @@ legend {
   width: 100%;
 }
 
-.forecast-card__max-temp {}
-
 .forecast-card__min-temp {
   color: #D3D3D3;
   margin-left: 18px;
@@ -594,8 +584,6 @@ legend {
   left: -66px;
   transform: rotate(-180deg) translate(0, 50%);
 }
-
-.main__details {}
 
 .main-datails__header {
   font-weight: bold;
