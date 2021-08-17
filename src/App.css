@@ -1,15 +1,10 @@
 .app {
-    display: grid;
-    grid-template-columns: 460px 1fr;
-  }
-  
-  .sidebar {
-    background-color: var(--primary-bg);
-    min-height: 100vh;
-  }
-  
-  .content {
-    padding: 42px 0 44px;
-    justify-self: center;
-    width: 720px;
-  }
+  display: grid;
+  grid-template-columns: 460px 1fr;
+}
+
+.content {
+  padding: 42px 0 44px;
+  justify-self: center;
+  width: 720px;
+}
