@@ -862,3 +862,11 @@ legend {
     transform: translate(24px, 0);
   }
 }
+
+/* SESRCH results */
+
+.search-results{
+  display:grid;
+  row-gap: 12px;
+  margin-top: 30px
+}
