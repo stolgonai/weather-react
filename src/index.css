@@ -427,7 +427,7 @@ legend {
   flex: 1;
   width: 100%;
   justify-content: center;
-  padding: 42px 120px 44px 140px;
+  padding: 42px 120px 44px 450px;
 }
 
 .main__container {
@@ -542,8 +542,6 @@ legend {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-.forecast-card__icon {}
 
 .forecast-card__text {
   display: flex;
