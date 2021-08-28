@@ -4,7 +4,6 @@ import rainIcon from "./assets/cloud-rain-solid.svg"
 import snowIcon from "./assets/snowflake-regular.svg"
 import sunIcon from "./assets/sun-regular.svg"
 import windIcon from "./assets/wind-solid.svg"
-import mapIcon from "./assets/city11.svg"
 import WeatherWidgets from './WeatherWidgets'
 
 const API_KEY = "93acb782ba9cde069e257374df26c92b"
@@ -182,9 +181,9 @@ function App() {
           </span>
         
         </div>
-        {/* <div className="locationIcon">
-          <img className="locIcon" src={mapIcon} alt="location icon" />
-        </div> */}
+
+        
+        
 
         {weather && (
           <div className="widget__icon">
