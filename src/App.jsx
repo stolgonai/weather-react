@@ -172,7 +172,7 @@ function App() {
           Search for city
         </button>
 
-        <div className="quot"> 
+       {!weather && <div className="quot"> 
           <p className="quote">
             “Wherever you go, no matter what the weather, always bring your own sunshine.”
           </p>
@@ -180,12 +180,12 @@ function App() {
             ― Anthony J. D'Angelo
           </span>
         
-        </div>
+        </div>}
+
 
         
-        
 
-        {weather && (
+        {weather  && (
           <div className="widget__icon">
             <img src={getWeatherIcon(weather.current.title)} alt="widget-icon" className="widget-icon__img" />
           </div>
@@ -270,8 +270,9 @@ function App() {
           </div>
         )}
       </div>
+      
       <main className="main">
-        < WeatherWidgets />
+        {!weather && < WeatherWidgets />}
         {weather && (
           <div className="main__container">
             <div className="main__forecast">
