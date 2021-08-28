@@ -4,6 +4,8 @@ import rainIcon from "./assets/cloud-rain-solid.svg"
 import snowIcon from "./assets/snowflake-regular.svg"
 import sunIcon from "./assets/sun-regular.svg"
 import windIcon from "./assets/wind-solid.svg"
+import mapIcon from "./assets/city11.svg"
+import WeatherWidgets from './WeatherWidgets'
 
 const API_KEY = "93acb782ba9cde069e257374df26c92b"
 const BASE_URL = "https://api.openweathermap.org/data/2.5"
@@ -170,6 +172,20 @@ function App() {
         >
           Search for city
         </button>
+
+        <div className="quot"> 
+          <p className="quote">
+            “Wherever you go, no matter what the weather, always bring your own sunshine.”
+          </p>
+          <span>
+            ― Anthony J. D'Angelo
+          </span>
+        
+        </div>
+        {/* <div className="locationIcon">
+          <img className="locIcon" src={mapIcon} alt="location icon" />
+        </div> */}
+
         {weather && (
           <div className="widget__icon">
             <img src={getWeatherIcon(weather.current.title)} alt="widget-icon" className="widget-icon__img" />
@@ -197,6 +213,7 @@ function App() {
             <input
               type="search"
               name="query"
+              placeholder="Please enter the city"
               className="searching-form__input"
             />
             <button className=" button search-form__button" type="submit">
@@ -255,6 +272,7 @@ function App() {
         )}
       </div>
       <main className="main">
+        < WeatherWidgets />
         {weather && (
           <div className="main__container">
             <div className="main__forecast">
