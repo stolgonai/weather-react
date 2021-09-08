@@ -32,12 +32,12 @@ function normalizeWeatherData(data) {
     humidity: data.humidity,
     windSpeed: data.wind_speed,
     visibility: data.visibility / 1000,
-    pressure: data.pressure/100,
+    pressure: data.pressure,
     datetime: new Date(data.dt * 1000),
   }
 }
 
-const dayFormatter = new Intl.DateTimeFormat('en-En', {
+const dayFormatter = new Intl.DateTimeFormat('en-Us', {
   weekday: "short",
   day: "numeric",
   month: "short",
@@ -51,6 +51,7 @@ const hourFormatter = new Intl.DateTimeFormat('en-En', {
 
 
 function DailyWeather({ weatherList }) {
+
   return (
     <div className="forecast__panel">
       <div className="forecast__body">
@@ -64,8 +65,8 @@ function DailyWeather({ weatherList }) {
                 <img src={getWeatherIcon(w.title)} alt="icon" width="40" />
               </div>
               <div className="forecast-card__text">
-                <div className="forecast-card__max-temp">{w.max}°C</div>
-                <div className="forecast-card__min-temp">{w.min}°C</div>
+                <div className="forecast-card__max-temp">{w.temp.max}°C</div>
+                <div className="forecast-card__min-temp">{w.temp.min}°C</div>
               </div>
             </div>
           ))}
@@ -86,6 +87,7 @@ function DailyWeather({ weatherList }) {
 }
 
 function HourlyWeather({ weatherList }) {
+  
   return (
     <div className="forecast__panel">
       <div className="forecast__body">
@@ -121,7 +123,7 @@ function App() {
   const [searchBar, setSearchBar] = useState(false);
   const [contries, setContries] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [weather, setWeather] = useState(null);
+  const [weather, setWeather] = useState(null || weather);
   const [isDaily,  setIsDaily] = useState(true)
 
   function onSearch(e) {
@@ -131,46 +133,50 @@ function App() {
     setLoading(true);
     fetch(
       `https://nominatim.openstreetmap.org/search?q=${query}&format=json&addressdetails=1`
-    )
+      )
       .then((res) => res.json())
       .then((data) => {
         setContries(data);
         setLoading(false);
       });
-  }
-
-  function getWeather(country) {
-    const { lat, lon, display_name } = country;
-    fetch(
-      `${BASE_URL}/onecall?lat=${lat}&lon=${lon}&exclude=current&appid=76a33d5c6292744e929def9989eb1f34&units=metric&lang=en`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setWeather({
-          current: {
-            ...normalizeWeatherData(data.hourly[0]),
-            city: display_name.split(',')[0],
-          },
-          hourly: data.hourly.map((w) => normalizeWeatherData(w)),
-          daily: data.daily.map((w) => normalizeWeatherData(w)),
+    }
+    
+    function getWeather(country) {
+      const { lat, lon, display_name } = country;
+      fetch(
+        `${BASE_URL}/onecall?lat=${lat}&lon=${lon}&exclude=current&appid=${API_KEY}&units=imperial&lang=en`
+        )
+        .then((res) => res.json())
+        .then((data) => {
+          setWeather({
+            current: {
+              ...normalizeWeatherData(data.hourly[0]),
+              city: display_name.split(',')[0],
+            },
+            hourly: data.hourly.map((w) => normalizeWeatherData(w)),
+            daily: data.daily.map((w) => normalizeWeatherData(w)),
+          });
+          setSearchBar(false);
         });
-        setSearchBar(false);
-      });
-  }
-
-  const searchBarClass = "widget__searching " + (searchBar ? "opened" : "");
-
-  const dateTitle = dayFormatter.format(new Date())
-
-  return (
+      }
+      
+      const searchBarClass = "widget__searching " + (searchBar ? "opened" : "");
+      
+      const dateTitle = dayFormatter.format(new Date())
+      
+      console.log(weather)
+      return (
     <div className="app">
       <div className="widget">
-        <button
-          className="button widget__serching-open"
-          onClick={() => setSearchBar(true)}
-        >
-          Search for city
-        </button>
+
+      <div>
+          <button
+            className="button widget__serching-open"
+            onClick={() => setSearchBar(true)}
+          >
+            Search for city
+          </button>
+        </div>
 
        {!weather && <div className="quot"> 
           <p className="quote">
@@ -181,10 +187,7 @@ function App() {
           </span>
         
         </div>}
-
-
-        
-
+       
         {weather  && (
           <div className="widget__icon">
             <img src={getWeatherIcon(weather.current.title)} alt="widget-icon" className="widget-icon__img" />
@@ -240,17 +243,18 @@ function App() {
         {weather && (
           <div className="widget__body">
             <div className="widget-body__temp">
+            <div className="widget-body__date">
+              <div className="date__text">Today</div>
+              <div className="date__info">{dateTitle}</div>
+            </div> 
               {weather.current.temp} <span className="temp__symbol">°C</span>
             </div>
             <div className="widget-body__text">{weather.current.description}</div>
             <div className="widget-body__feels-like">
               Feels like {weather.current.tempFeelsLike} °C
             </div>
-            <div className="widget-body__date">
-              <div className="date__text">Today</div>
-              <div className="date__info">{dateTitle}</div>
-            </div>  
-            <div className="widget-body__geo">
+           
+            <div className="widget-body__"geo>
               <div className="geo__icon">
                 <svg
                   width="24"
@@ -283,7 +287,7 @@ function App() {
                 <div className="forecast-header__radios">
                   <label className="forecast-radio__label">
                     <input type="radio" name="forecast-type" checked={isDaily} onChange={() => setIsDaily(true)} className="forecast-radio__input" data-forecast="weekly" />
-                    <span className="forecast-radio__text forecast-radio__text_active">weeklw</span>
+                    <span className="forecast-radio__text forecast-radio__text_active">weekly</span>
                   </label>
                   <label className="forecast-radio__label">
                     <input type="radio" name="forecast-type" checked={!isDaily} onChange={() => setIsDaily(false)} className="forecast-radio__input" data-forecast="hourly" />
@@ -304,7 +308,7 @@ function App() {
                   <div className="details-card">
                     <div className="details-card__title">Wind Gust</div>
                     <div className="details-card__body">
-                      {weather.current.windSpeed} <span className="details-card__body_smaller">m/s</span>/span>
+                      {weather.current.windSpeed} <span className="details-card__body_smaller">m/s</span>
                     </div>
                     <div className="details-card__footer">
                       <div className="details-footer__icon">
@@ -325,13 +329,13 @@ function App() {
                   <div className="details-card">
                     <div className="details-card__title">Visibility</div>
                     <div className="details-card__body">
-                      {weather.current.visibility} <span className="details-card__body_smaller">km</span>
+                      {weather.current.visibility} <span className="details-card__body_smaller">m</span>
                     </div>
                   </div>
                   <div className="details-card">
                     <div className="details-card__title">Atmospheric pressure</div>
                     <div className="details-card__body">
-                      {weather.current.pressure} <span className="details-card__body_smallest">inHg.</span>
+                      {weather.current.pressure} <span className="details-card__body_smallest">mb</span>
                     </div>
                   </div>
                 </div>
