@@ -8,6 +8,7 @@ import WeatherWidgets from './WeatherWidgets'
 
 const API_KEY = "93acb782ba9cde069e257374df26c92b"
 const BASE_URL = "https://api.openweathermap.org/data/2.5"
+let timeZone;
 
 function getWeatherIcon(title) {
   switch(title) {
@@ -43,12 +44,24 @@ const dayFormatter = new Intl.DateTimeFormat('en-Us', {
   month: "short",
 })
 
-const hourFormatter = new Intl.DateTimeFormat('en-En', {
-  hour12: false,
-  hour: "numeric",
-  minute: "numeric"
-})
+// const hourFormatter = new Intl.DateTimeFormat('en-En', {
+//   hour12: false,
+//   hour: "numeric",
+//   minute: "numeric"
+// })
 
+
+function formatByTimeZone(date){
+  console.log(timeZone, "this is time zone")
+  return new Intl.DateTimeFormat('en-En', {
+    timeZone: timeZone,
+    hour12: false,
+    hour: "numeric",
+    minute: "numeric"
+  }).format(date)
+
+  
+}
 
 function DailyWeather({ weatherList }) {
 
@@ -86,6 +99,7 @@ function DailyWeather({ weatherList }) {
   )
 }
 
+
 function HourlyWeather({ weatherList }) {
   
   return (
@@ -94,7 +108,7 @@ function HourlyWeather({ weatherList }) {
         <div className="forecast-body__cards">
           {weatherList.map((w) => (
             <div className="forecast-card" key={w.datetime.getTime()}>
-              <div className="forecast-card__title">{hourFormatter.format(w.datetime)}</div>
+              <div className="forecast-card__title">{formatByTimeZone(w.datetime)}</div>
               <div className="forecast-card__icon">
                 <img src={getWeatherIcon(w.title)} alt="icon" width="40" />
               </div>
@@ -125,14 +139,24 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [weather, setWeather] = useState(null || weather);
   const [isDaily,  setIsDaily] = useState(true)
-  console.log(contries.slice(0,4))
+  
+  console.log(contries)
+
+  const hourFormatter = new Intl.DateTimeFormat('en-En', {
+    timeZone: weather && weather.timeZone,
+    hour12: false,
+    hour: "numeric",
+    minute: "numeric"
+  })
+
+
   function onSearch(e) {
     e.preventDefault();
     const form = new FormData(e.target);
     const query = form.get("query");
     setLoading(true);
     fetch(
-      `https://nominatim.openstreetmap.org/search?q=${query}&format=json&addressdetails=1`
+      `https://nominatim.openstreetmap.org/search?q=${query}&format=json&units=metric&addressdetails=1`
       )
       .then((res) => res.json())
       .then((data) => {
@@ -140,11 +164,11 @@ function App() {
         setLoading(false);
       });
     }
-    
+    console.log(weather)
     function getWeather(country) {
       const { lat, lon, display_name } = country;
       fetch(
-        `${BASE_URL}/onecall?lat=${lat}&lon=${lon}&exclude=current&cnt=4&appid=${API_KEY}&units=imperial&lang=en`
+        `${BASE_URL}/onecall?lat=${lat}&lon=${lon}&exclude=current&cnt=4&appid=${API_KEY}&units=metric&lang=en`
         )
         .then((res) => res.json())
         .then((data) => {
@@ -155,8 +179,11 @@ function App() {
             },
             hourly: data.hourly.map((w) => normalizeWeatherData(w)),
             daily: data.daily.map((w) => normalizeWeatherData(w)),
+            timeZone: data.timezone 
+            
           });
           setSearchBar(false);
+          timeZone = data.timezone
         });
       }
       
@@ -231,19 +258,19 @@ function App() {
           )}
           <ul className="search-results">
             {contries.slice(0,4).map((country) => (
-             ( !country.address.display_name &&
+             !country.address.display_name ?
                 (<li key={country.place_id}>
                 <button className="btn searchResult" onClick={() => getWeather(country)}>
                   {country.display_name}
                 </button>
-              </li>)) && (
+              </li>) : (
                 <li key={country.place_id}>
                 <button className="btn searchResult" onClick={() => getWeather(country)}>
                   {`${country.address.city || country.address.town || country.address.village }, ${country.address.state}, ${country.address.country}`}
                 </button>
               </li>
               )
-            ) )}
+             ))}
           </ul>
         </div>
         {weather && (
