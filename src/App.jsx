@@ -125,7 +125,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [weather, setWeather] = useState(null || weather);
   const [isDaily,  setIsDaily] = useState(true)
-
+  console.log(contries.slice(0,4))
   function onSearch(e) {
     e.preventDefault();
     const form = new FormData(e.target);
@@ -144,7 +144,7 @@ function App() {
     function getWeather(country) {
       const { lat, lon, display_name } = country;
       fetch(
-        `${BASE_URL}/onecall?lat=${lat}&lon=${lon}&exclude=current&appid=${API_KEY}&units=imperial&lang=en`
+        `${BASE_URL}/onecall?lat=${lat}&lon=${lon}&exclude=current&cnt=4&appid=${API_KEY}&units=imperial&lang=en`
         )
         .then((res) => res.json())
         .then((data) => {
@@ -164,7 +164,6 @@ function App() {
       
       const dateTitle = dayFormatter.format(new Date())
       
-      console.log(weather)
       return (
     <div className="app">
       <div className="widget">
@@ -231,13 +230,20 @@ function App() {
             </div>
           )}
           <ul className="search-results">
-            {contries.map((country) => (
-              <li key={country.place_id}>
-                <button onClick={() => getWeather(country)}>
+            {contries.slice(0,4).map((country) => (
+             ( !country.address.display_name &&
+                (<li key={country.place_id}>
+                <button className="btn searchResult" onClick={() => getWeather(country)}>
                   {country.display_name}
                 </button>
+              </li>)) && (
+                <li key={country.place_id}>
+                <button className="btn searchResult" onClick={() => getWeather(country)}>
+                  {`${country.address.city || country.address.town || country.address.village }, ${country.address.state}, ${country.address.country}`}
+                </button>
               </li>
-            ))}
+              )
+            ) )}
           </ul>
         </div>
         {weather && (

@@ -1,7 +1,12 @@
 /*  Weather */
 @import url('https://fonts.googleapis.com/css2?family=Playball&display=swap');
 .weatherWidgets{
-  margin: auto
+  width: 100%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  grid-template-rows: repeat(2, auto);
+  row-gap: 30px;
 }
 
 div.quot{
