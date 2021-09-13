@@ -270,7 +270,7 @@ function App() {
           <div className="widget__body">
             <div className="widget-body__temp">
             <div className="widget-body__date">
-              <div className="date__text">Today</div>
+              <div className="date__text" > Today </div>
               <div className="date__info">{dateTitle}</div>
             </div> 
               {weather.current.temp} <span className="temp__symbol">°C</span>
@@ -280,7 +280,7 @@ function App() {
               Feels like {weather.current.tempFeelsLike} °C
             </div>
            
-            <div className="widget-body__"geo>
+            <div className="widget-body__geo">
               <div className="geo__icon">
                 <svg
                   width="24"
@@ -320,6 +320,11 @@ function App() {
                     <span className="forecast-radio__text">hourly</span>
                   </label>
                 </div>              
+             
+                <div className="regulateMetrics">
+                  <button className="button metrics">Fa</button>
+                  <button className="button metrics"> °C</button>
+                </div>
               </div>
               {isDaily ? (
                 <DailyWeather weatherList={weather.daily} />

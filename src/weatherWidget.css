@@ -1,12 +1,11 @@
 /*  Weather */
 @import url('https://fonts.googleapis.com/css2?family=Playball&display=swap');
 .weatherWidgets{
-  width: 100%;
-  margin: auto;
   display: grid;
-  grid-template-columns: repeat(3, auto);
-  grid-template-rows: repeat(2, auto);
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
   row-gap: 30px;
+  column-gap: 130px;
 }
 
 div.quot{
@@ -313,7 +312,7 @@ p.quote{
   }
   
   .weather-icon{
-    margin-left: 200px;
+    /* margin-left: 200px; */
     display: inline-block;
   }
   
