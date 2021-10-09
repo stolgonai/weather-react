@@ -45,7 +45,6 @@ const dayFormatter = new Intl.DateTimeFormat('en-Us', {
 })
 
 function formatByTimeZone(date){
-  console.log(timeZone, "this is time zone")
   return new Intl.DateTimeFormat('en-En', {
     timeZone: timeZone,
     hour12: false,
@@ -53,11 +52,11 @@ function formatByTimeZone(date){
     minute: "numeric"
   }).format(date)
 
-  
 }
 
 function DailyWeather({ weatherList }) {
-
+  let a = weatherList.map(e => e.title)
+  console.log(a)
   return (
     <div className="forecast__panel">
       <div className="forecast__body">
@@ -133,8 +132,6 @@ function App() {
   const [weather, setWeather] = useState(null || weather);
   const [isDaily,  setIsDaily] = useState(true)
   
-  console.log(contries)
-
   const hourFormatter = new Intl.DateTimeFormat('en-En', {
     timeZone: weather && weather.timeZone,
     hour12: false,
@@ -157,7 +154,7 @@ function App() {
         setLoading(false);
       });
     }
-    console.log(weather)
+    
     function getWeather(country) {
       const { lat, lon, display_name } = country;
       fetch(
@@ -337,9 +334,9 @@ function App() {
                 <div className="main-datails__header">Today</div>
                 <div className="main-details__cards">
                   <div className="details-card">
-                    <div className="details-card__title">Wind Gust</div>
+                    <div className="details-card__title">Wind Speed</div>
                     <div className="details-card__body">
-                      {weather.current.windSpeed} <span className="details-card__body_smaller">m/s</span>
+                      {weather.current.windSpeed} <span className="details-card__body_smaller">mph</span>
                     </div>
                     <div className="details-card__footer">
                       <div className="details-footer__icon">

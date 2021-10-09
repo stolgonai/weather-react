@@ -11,8 +11,7 @@ function Carousel() {
         <h2>Прогноз</h2>
         <button
           className={cn(css.headerBtn, { [css.headerBtnActive]: isWeekMode })}
-          onClick={() => setIsWeekMode(true)}
-        >
+          onClick={() => setIsWeekMode(true)} >
           На неделю
         </button>
         <button
