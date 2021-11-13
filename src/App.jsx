@@ -10,6 +10,7 @@ const API_KEY = "93acb782ba9cde069e257374df26c92b"
 const BASE_URL = "https://api.openweathermap.org/data/2.5"
 let timeZone;
 
+//function for display correct weather icon
 function getWeatherIcon(title) {
   switch(title) {
     case 'clear': return sunIcon
@@ -54,9 +55,9 @@ function formatByTimeZone(date){
 
 }
 
+// function for display weather forecast for 7 days
 function DailyWeather({ weatherList }) {
-  let a = weatherList.map(e => e.title)
-  console.log(a)
+  
   return (
     <div className="forecast__panel">
       <div className="forecast__body">
@@ -91,7 +92,7 @@ function DailyWeather({ weatherList }) {
   )
 }
 
-
+// function for display weather forecast hourly
 function HourlyWeather({ weatherList }) {
   
   return (
@@ -131,6 +132,9 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [weather, setWeather] = useState(null || weather);
   const [isDaily,  setIsDaily] = useState(true)
+  const [errorMessage, setErrorMessage] = useState("");
+  console.log(weather, "thisis second API")
+  console.log(contries, "thisis first Api")
   
   const hourFormatter = new Intl.DateTimeFormat('en-En', {
     timeZone: weather && weather.timeZone,
@@ -139,29 +143,45 @@ function App() {
     minute: "numeric"
   })
 
-
+  // function to take value from input, and use it as a query param to fetch data and get city name 
   function onSearch(e) {
+
+    // preventing browser default behavior of the form (by default it submits to the server with a reboot)
     e.preventDefault();
-    const form = new FormData(e.target);
-    const query = form.get("query");
+
+    //creting object from HTMLFormElement(e.target), by using FormData class, to get access to the input value, and use it as a q.param
+    const form = new FormData(e.target); // object created
+    const query = form.get("query"); // FormData class has a method "get", returns the first value associated with a given key ("query") from within a FormData object
+   
+    // while requesting data, loading is true for better ui
     setLoading(true);
+
+    // sending request
     fetch(
       `https://nominatim.openstreetmap.org/search?q=${query}&format=json&units=metric&addressdetails=1`
       )
+      // receiving data in JSON format, and converting it to normal object format
       .then((res) => res.json())
       .then((data) => {
-        setContries(data);
-        setLoading(false);
-      });
+        //received data assign to the "contries" state as array
+          setContries(data);
+          //turn off the loading img
+          setLoading(false);
+      })
+      // if data did not come throw error message
+      .catch((error) => console.log(error))
     }
     
+    // this function is for display weather detailed details for one city for one day (sideBarWidget)
     function getWeather(country) {
+      // distracting key names from oneCity object to use 
       const { lat, lon, display_name } = country;
       fetch(
         `${BASE_URL}/onecall?lat=${lat}&lon=${lon}&exclude=current&cnt=4&appid=${API_KEY}&units=metric&lang=en`
         )
         .then((res) => res.json())
         .then((data) => {
+          // assign data for hourly, daily weather forecast
           setWeather({
             current: {
               ...normalizeWeatherData(data.hourly[0]),
@@ -177,8 +197,10 @@ function App() {
         });
       }
       
+      // make conditional open of sideBar Widget (first searhc results)
       const searchBarClass = "widget__searching " + (searchBar ? "opened" : "");
       
+
       const dateTitle = dayFormatter.format(new Date())
       
       return (
@@ -246,9 +268,13 @@ function App() {
               <div></div>
             </div>
           )}
+
+
           <ul className="search-results">
+
             {contries.slice(0,4).map((country) => (
-             !country.address.display_name ?
+              
+              !country.address.display_name ?
                 (<li key={country.place_id}>
                 <button className="btn searchResult" onClick={() => getWeather(country)}>
                   {country.display_name}
@@ -260,7 +286,12 @@ function App() {
                 </button>
               </li>
               )
-             ))}
+             )
+             
+             )
+            
+            }
+
           </ul>
         </div>
         {weather && (
