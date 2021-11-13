@@ -349,10 +349,10 @@ function App() {
                   </label>
                 </div>              
              
-                <div className="regulateMetrics">
+                {/* <div className="regulateMetrics">
                   <button className="button metrics">Fa</button>
                   <button className="button metrics"> °C</button>
-                </div>
+                </div> */}
               </div>
               {isDaily ? (
                 <DailyWeather weatherList={weather.daily} />
